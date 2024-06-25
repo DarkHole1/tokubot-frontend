@@ -1,0 +1,27 @@
+.App {
+  background-color: var(--tg-theme-bg-color);
+  font-family: Roboto, sans-serif;
+  margin-bottom: 45px;
+  padding: 20px;
+}
+
+.emoji-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.emoji-block {
+  border: 3px solid var(--tg-theme-button-color);
+  border-radius: 10px;
+  padding: 5px;
+  margin: 5px;
+}
+
+.hint {
+  font-size: 20px;
+  color: var(--tg-theme-hint-color);
+}
+
+.mb {
+  margin-bottom: 20px;
+}
