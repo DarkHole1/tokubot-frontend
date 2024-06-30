@@ -21,7 +21,7 @@ const App: Component = () => {
 
   const initData = useInitData();
   const startParam = createMemo(() => initData()?.startParam)
-  const showUserID = createMemo(() => Number(startParam()?.split('/')[1]) ?? initData()?.user?.id)
+  const showUserID = createMemo(() => startParam()?.split('/')[1] ?? initData()?.user?.id)
 
   type Reactions =
     | {
@@ -37,6 +37,7 @@ const App: Component = () => {
 
   createEffect(async () => {
     const id = showUserID();
+    console.log(id)
     if (!id) {
       return;
     }
