@@ -1,5 +1,6 @@
 import {
   createEffect,
+  createMemo,
   createSignal,
   Index,
   Show,
@@ -12,57 +13,15 @@ import {
   useInitData,
   useThemeParams,
 } from "@tma.js/sdk-solid";
+import { memo } from "solid-js/web";
 
 const App: Component = () => {
   const tp = useThemeParams();
   bindThemeParamsCSSVars(tp());
 
   const initData = useInitData();
-
-  // const reactions = {
-  //   "🔥": 152,
-  //   "👍": 129,
-  //   "❤": 188,
-  //   "🥰": 45,
-  //   "🤔": 20,
-  //   "😁": 210,
-  //   "🤣": 9,
-  //   "🤗": 24,
-  //   "😍": 4,
-  //   "💯": 1,
-  //   custom: 127,
-  //   "❤‍🔥": 8,
-  //   "😢": 39,
-  //   "🤝": 15,
-  //   "😨": 5,
-  //   "👌": 10,
-  //   "😭": 7,
-  //   "🤓": 1,
-  //   "🤯": 23,
-  //   "😇": 2,
-  //   "👎": 9,
-  //   "💊": 2,
-  //   "😴": 1,
-  //   "👀": 1,
-  //   "🗿": 2,
-  //   "🤬": 6,
-  //   "🎉": 17,
-  //   "✍": 1,
-  //   "🤨": 3,
-  //   "🐳": 5,
-  //   "😱": 4,
-  //   "😐": 2,
-  //   "🙏": 3,
-  //   "🥴": 4,
-  //   "🤷": 1,
-  //   "🆒": 5,
-  //   "🫡": 3,
-  //   "🖕": 3,
-  //   "🙉": 1,
-  //   "😈": 1,
-  //   "💅": 5,
-  //   "🤷‍♀": 1,
-  // };
+  const startParam = createMemo(() => initData()?.startParam)
+  const showUserID = createMemo(() => Number(startParam()?.split('/')[1]) ?? initData()?.user?.id)
 
   type Reactions =
     | {
@@ -77,7 +36,7 @@ const App: Component = () => {
   });
 
   createEffect(async () => {
-    const id = initData()?.user?.id;
+    const id = showUserID();
     if (!id) {
       return;
     }
