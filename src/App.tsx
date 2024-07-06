@@ -13,7 +13,6 @@ import {
   useInitData,
   useThemeParams,
 } from "@tma.js/sdk-solid";
-import { memo } from "solid-js/web";
 
 const App: Component = () => {
   const tp = useThemeParams();
@@ -21,7 +20,7 @@ const App: Component = () => {
 
   const initData = useInitData();
   const startParam = createMemo(() => initData()?.startParam)
-  const showUserID = createMemo(() => startParam()?.split('/')[1] ?? initData()?.user?.id)
+  const showUserID = createMemo(() => startParam()?.split('_')[1] ?? initData()?.user?.id)
 
   type Reactions =
     | {
@@ -65,7 +64,7 @@ const App: Component = () => {
 
   return (
     <div class={styles.App}>
-      <div>Ваши реакции</div>
+      <div>{initData()?.user?.id == showUserID() ? 'Ваши реакции' : 'Реакции пользователя'}</div>
       <div class={[styles.hint, styles.mb].join(" ")}>за сегодня</div>
       <Show when={getReactions()} fallback={<div>Загружаем...</div>}>
         {(reactions) => (
