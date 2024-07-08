@@ -26,8 +26,15 @@
   background-color: var(--tg-theme-section-bg-color);
 }
 
+.emoji-row > .counter {
+  flex-shrink: 0;
+}
+
 .emoji-row > .name {
   flex-grow: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .hint {

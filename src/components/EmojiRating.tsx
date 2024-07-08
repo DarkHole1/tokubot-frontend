@@ -39,34 +39,34 @@ const EmojiRating: Component = () => {
 
   const countReaction = (n: number) => {
     if (n > 1000) {
-      return '☠️'
+      return "☠️";
     }
 
     if (n > 500) {
-      return '🤯'
+      return "🤯";
     }
 
     if (n > 250) {
-      return '😳'
+      return "😳";
     }
 
     if (n > 100) {
-      return '😎'
+      return "😎";
     }
 
     if (n > 50) {
-      return '😊'
+      return "😊";
     }
 
     if (n > 10) {
-      return '👍'
+      return "👍";
     }
 
     if (n > 0) {
-      return '👌'
+      return "👌";
     }
-    return '🤔'
-  }
+    return "🤔";
+  };
 
   return (
     <Show when={getRating()} fallback={<div>Loading...</div>}>
@@ -75,7 +75,10 @@ const EmojiRating: Component = () => {
           {(row) => (
             <div class={styles["emoji-row"]}>
               <div class={styles["name"]}>{row().name}</div>
-              <div>{row().count}{countReaction(row().count)}</div>
+              <div class={styles["counter"]}>
+                {row().count}
+                {countReaction(row().count)}
+              </div>
             </div>
           )}
         </Index>
