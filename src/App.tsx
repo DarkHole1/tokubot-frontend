@@ -1,4 +1,4 @@
-import { createMemo, type Component } from "solid-js";
+import { createMemo, Match, Switch, type Component } from "solid-js";
 
 import styles from "./App.module.css";
 import {
@@ -7,6 +7,7 @@ import {
   useThemeParams,
 } from "@tma.js/sdk-solid";
 import EmojiList from "./components/EmojiList";
+import EmojiRating from "./components/EmojiRating";
 
 const App: Component = () => {
   const tp = useThemeParams();
@@ -20,10 +21,17 @@ const App: Component = () => {
 
   return (
     <div class={styles.App}>
-      <EmojiList
-        userId={Number(showUserID())}
-        isMyList={showUserID() == initData()?.user?.id}
-      />
+      <Switch>
+        <Match when={startParam() == "emoji_rating"}>
+          <EmojiRating />
+        </Match>
+        <Match when={isFinite(Number(showUserID()))}>
+          <EmojiList
+            userId={Number(showUserID())}
+            isMyList={showUserID() == initData()?.user?.id}
+          />
+        </Match>
+      </Switch>
     </div>
   );
 };
