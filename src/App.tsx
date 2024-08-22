@@ -8,6 +8,7 @@ import {
 } from "@tma.js/sdk-solid";
 import EmojiList from "./components/EmojiList";
 import EmojiRating from "./components/EmojiRating";
+import WeeklyStats from "./components/WeeklyStats";
 
 const App: Component = () => {
   const tp = useThemeParams();
@@ -25,11 +26,22 @@ const App: Component = () => {
         <Match when={startParam() == "emoji_rating"}>
           <EmojiRating />
         </Match>
-        <Match when={isFinite(Number(showUserID()))}>
+        <Match
+          when={
+            startParam()?.startsWith("emoji_") && isFinite(Number(showUserID()))
+          }
+        >
           <EmojiList
             userId={Number(showUserID())}
             isMyList={showUserID() == initData()?.user?.id}
           />
+        </Match>
+        <Match
+          when={
+            startParam()?.startsWith("stats_") && isFinite(Number(showUserID()))
+          }
+        >
+          <WeeklyStats userId={Number(showUserID())} />
         </Match>
       </Switch>
     </div>
