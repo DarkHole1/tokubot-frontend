@@ -1,4 +1,7 @@
 import { Component, createEffect, createSignal } from "solid-js";
+import c3 from "c3";
+
+import styles from "../App.module.css";
 
 type Stats =
   | {
@@ -24,6 +27,7 @@ const WeeklyStats: Component<{
   const [stats, setStats] = createSignal<Stats>({
     status: "loading",
   });
+  let chartElement!: HTMLDivElement;
 
   createEffect(async () => {
     setStats({
@@ -42,7 +46,64 @@ const WeeklyStats: Component<{
     });
   });
 
-  return <pre>{getStats(stats())?.at(0)?.date.constructor.name}</pre>;
+  createEffect(() => {
+    const currentStats = stats();
+    if (currentStats.status != "loaded") {
+      return;
+    }
+
+    const chart = c3.generate({
+      bindto: chartElement,
+      // type: 'step',
+      data: {
+        json: currentStats.stats,
+        x: "date",
+        // xFormat: '%Y-%m-%dT%H:%M:%S.%fZ',
+        keys: {
+          x: "date",
+          value: ["watchedMinutes"],
+        },
+      },
+      legend: {
+        show: false
+      },
+      color: {
+        pattern: ['#ffffff']
+      },
+      axis: {
+        x: {
+          type: "timeseries",
+          show: false
+        //   tick: {
+        //     count: 10,
+        //     format: "%Y-%m-%d",
+        //   },
+        },
+        y: {
+            show: false
+        //   label: {
+        //     text: "Время, минут",
+        //     position: "outer-middle",
+        //   },
+        },
+      },
+      interaction: {
+        enabled: false
+      }
+    //   grid: {
+    //     x: { show: true },
+    //     y: { show: true },
+    //   },
+    });
+  });
+
+  return (
+    <>
+      <div>Статистика просмотренного</div>
+      <div class={[styles.hint, styles.mb].join(" ")}>за неделю</div>
+      <div ref={chartElement} class={styles.chart}>Chart will be here</div>
+    </>
+  );
 };
 
 export default WeeklyStats;
