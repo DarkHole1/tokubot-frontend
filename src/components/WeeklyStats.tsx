@@ -2,7 +2,7 @@ import { Component, createEffect, createSignal, Show } from "solid-js";
 import c3 from "c3";
 
 import styles from "../App.module.css";
-import { compareDesc, format, startOfDay } from "date-fns";
+import { addHours, addMinutes, compareDesc, format, parseJSON, startOfDay } from "date-fns";
 import Plot from "./Plot";
 
 type Stats =
@@ -40,7 +40,7 @@ const WeeklyStats: Component<{
 
     const entries: StatsEntry[] = data.map((entry: any) => ({
       ...entry,
-      date: new Date(entry.date),
+      date: parseJSON(entry.date),
     }));
 
     const groupEntries = new Map<string, StatsEntry[]>();
@@ -60,7 +60,7 @@ const WeeklyStats: Component<{
       groupEntries
         .values()
         .map((group) => group.sort((a, b) => compareDesc(a.date, b.date))[0])
-        .map((entry) => ({ ...entry, date: startOfDay(entry.date) }))
+        .map((entry) => ({ ...entry, date: addMinutes(startOfDay(entry.date), -entry.date.getTimezoneOffset()) }))
     );
 
     const relativeEntries = filteredEntries.map((entry) => ({
