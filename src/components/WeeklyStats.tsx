@@ -2,7 +2,7 @@ import { Component, createEffect, createSignal } from "solid-js";
 import c3 from "c3";
 
 import styles from "../App.module.css";
-import { compareDesc, format } from "date-fns";
+import { compareDesc, format, startOfDay } from "date-fns";
 
 type Stats =
   | {
@@ -60,6 +60,7 @@ const WeeklyStats: Component<{
       groupEntries
         .values()
         .map((group) => group.sort((a, b) => compareDesc(a.date, b.date))[0])
+        .map((entry) => ({ ...entry, date: startOfDay(entry.date) }))
     );
 
     setStats({
