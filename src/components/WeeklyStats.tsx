@@ -63,9 +63,21 @@ const WeeklyStats: Component<{
         .map((entry) => ({ ...entry, date: startOfDay(entry.date) }))
     );
 
+    const relativeEntries = filteredEntries.map((entry) => ({
+      plannedMinutes: Math.max(
+        0,
+        entry.plannedMinutes - filteredEntries[0].plannedMinutes
+      ),
+      watchedMinutes: Math.max(
+        0,
+        entry.watchedMinutes - filteredEntries[0].watchedMinutes
+      ),
+      date: entry.date,
+    }));
+
     setStats({
       status: "loaded",
-      stats: filteredEntries,
+      stats: relativeEntries,
     });
   });
 
@@ -80,7 +92,7 @@ const WeeklyStats: Component<{
               data={stats()}
               width={350}
               height={308}
-              marginLeft={80}
+              marginLeft={50}
               marginRight={20}
               marginTop={20}
               marginBottom={20}

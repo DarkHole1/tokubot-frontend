@@ -2,6 +2,16 @@ import { Component, createEffect } from "solid-js";
 import { StatsEntry } from "./WeeklyStats";
 import * as d3 from "d3";
 
+const formatDelta = (v: number) => {
+  const suffixes = ["d", "h", "m"];
+  const parts = [v / 60 / 24, (v / 60) % 24, v % 60]
+    .map((p) => Math.floor(p))
+    .map((p, i) => (p > 0 ? `${p}${suffixes[i]}` : ""))
+    .filter((p) => p.length > 0);
+
+  return parts.join(" ");
+};
+
 const Plot: Component<{
   width?: number;
   height?: number;
@@ -46,7 +56,9 @@ const Plot: Component<{
   });
 
   createEffect(() => {
-    d3.select(axisLeftRef).call(d3.axisLeft(y).tickFormat((v) => `${Math.floor(v.valueOf() / 60 / 24)}d ${Math.floor(v.valueOf() / 60 % 24)}h ${Math.floor(v.valueOf() % 60)}m`));
+    d3.select(axisLeftRef).call(
+      d3.axisLeft(y).tickFormat((v) => formatDelta(v.valueOf()))
+    );
   });
 
   return (
