@@ -1,4 +1,4 @@
-import { Component } from "solid-js";
+import { Component, createEffect } from "solid-js";
 import { StatsEntry } from "./WeeklyStats";
 import * as d3 from "d3";
 
@@ -19,8 +19,11 @@ const Plot: Component<{
   const marginLeft = () => props.marginLeft ?? 20;
   const data = () => props.data;
 
+  let axisBottomRef!: SVGGElement;
+  let axisLeftRef!: SVGGElement;
+
   const x = d3
-    .scaleLinear()
+    .scaleUtc()
     .domain(d3.extent(data().map((entry) => entry.date)) as [Date, Date])
     .range([marginLeft(), width() - marginRight()])
     .nice();
@@ -38,13 +41,34 @@ const Plot: Component<{
     .x((d) => x(d.date))
     .y((d) => y(d.watchedMinutes));
 
-  return <svg width={width()} height={height()}>
-    {/* <g ref={}></g> */}
-    <path fill="none" stroke="white" stroke-width="1.5" d={line(data())!} />
-    <g>
-      {data().map((d, i) => (<circle cx={x(d.date)} cy={y(d.watchedMinutes)} r="2.5" fill="white" />))}
-    </g>
-  </svg>;
+  createEffect(() => {
+    d3.select(axisBottomRef).call(d3.axisBottom(x).ticks(7));
+  });
+
+  createEffect(() => {
+    d3.select(axisLeftRef).call(d3.axisLeft(y));
+  });
+
+  return (
+    <svg width={width()} height={height()}>
+      <g
+        ref={axisBottomRef}
+        transform={`translate(0,${height() - marginBottom()})`}
+      ></g>
+      <g ref={axisLeftRef} transform={`translate(${marginLeft()},0)`}></g>
+      <path fill="none" stroke="white" stroke-width="1.5" d={line(data())!} />
+      <g>
+        {data().map((d, i) => (
+          <circle
+            cx={x(d.date)}
+            cy={y(d.watchedMinutes)}
+            r="2.5"
+            fill="white"
+          />
+        ))}
+      </g>
+    </svg>
+  );
 };
 
 export default Plot;

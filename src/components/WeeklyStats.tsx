@@ -80,10 +80,10 @@ const WeeklyStats: Component<{
               data={stats()}
               width={350}
               height={308}
-              marginLeft={0}
-              marginRight={0}
-              marginTop={0}
-              marginBottom={0}
+              marginLeft={50}
+              marginRight={20}
+              marginTop={20}
+              marginBottom={20}
             />
           )}
         </Show>
