@@ -116,7 +116,17 @@ const WeeklyStats: Component<{
       </div>
       <div>
         <Show when={getStats(stats())} fallback={"Loading plot"}>
-          {(stats) => <Plot data={stats()} />}
+          {(stats) => (
+            <Plot
+              data={stats()}
+              width={350}
+              height={308}
+              marginLeft={0}
+              marginRight={0}
+              marginTop={0}
+              marginBottom={0}
+            />
+          )}
         </Show>
       </div>
     </>

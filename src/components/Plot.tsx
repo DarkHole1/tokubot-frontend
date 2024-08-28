@@ -30,7 +30,7 @@ const Plot: Component<{
     .domain(
       d3.extent(data().map((entry) => entry.watchedMinutes)) as [number, number]
     )
-    .range([marginLeft(), width() - marginRight()])
+    .range([height() - marginBottom(), marginTop()])
     .nice();
 
   const line = d3
@@ -39,9 +39,10 @@ const Plot: Component<{
     .y((d) => y(d.watchedMinutes));
 
   return <svg width={width()} height={height()}>
+    {/* <g ref={}></g> */}
     <path fill="none" stroke="white" stroke-width="1.5" d={line(data())!} />
     <g>
-      {data().map((d, i) => (<circle cx={x(d.date)} cy={y(d.watchedMinutes)} r="2.5" />))}
+      {data().map((d, i) => (<circle cx={x(d.date)} cy={y(d.watchedMinutes)} r="2.5" fill="white" />))}
     </g>
   </svg>;
 };
