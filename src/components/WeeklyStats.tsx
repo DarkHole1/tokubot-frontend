@@ -29,7 +29,6 @@ const WeeklyStats: Component<{
   const [stats, setStats] = createSignal<Stats>({
     status: "loading",
   });
-  let chartElement!: HTMLDivElement;
 
   createEffect(async () => {
     setStats({
@@ -70,50 +69,10 @@ const WeeklyStats: Component<{
     });
   });
 
-  createEffect(() => {
-    const currentStats = stats();
-    if (currentStats.status != "loaded") {
-      return;
-    }
-
-    const chart = c3.generate({
-      bindto: chartElement,
-      data: {
-        json: currentStats.stats,
-        x: "date",
-        keys: {
-          x: "date",
-          value: ["watchedMinutes"],
-        },
-      },
-      legend: {
-        show: false,
-      },
-      color: {
-        pattern: ["#ffffff"],
-      },
-      axis: {
-        x: {
-          type: "timeseries",
-          show: false,
-        },
-        y: {
-          show: false,
-        },
-      },
-      interaction: {
-        enabled: false,
-      },
-    });
-  });
-
   return (
     <>
       <div>Статистика просмотренного</div>
       <div class={[styles.hint, styles.mb].join(" ")}>за неделю</div>
-      <div ref={chartElement} class={styles.chart}>
-        Chart will be here
-      </div>
       <div>
         <Show when={getStats(stats())} fallback={"Loading plot"}>
           {(stats) => (
