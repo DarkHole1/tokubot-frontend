@@ -2,6 +2,7 @@ import { Component, createEffect, createSignal } from "solid-js";
 import c3 from "c3";
 
 import styles from "../App.module.css";
+import { compareDesc, format } from "date-fns";
 
 type Stats =
   | {
@@ -37,12 +38,33 @@ const WeeklyStats: Component<{
     const res = await fetch(`/api/stats/weekly?id=${props.userId}`);
     const data = await res.json();
 
+    const entries: StatsEntry[] = data.map((entry: any) => ({
+      ...entry,
+      date: new Date(entry.date),
+    }));
+
+    const groupEntries = new Map<string, StatsEntry[]>();
+
+    for (const entry of entries) {
+      const day = format(entry.date, "Y-M-d");
+      let arr = groupEntries.get(day);
+      if (!arr) {
+        arr = [];
+        groupEntries.set(day, arr);
+      }
+
+      arr.push(entry);
+    }
+
+    const filteredEntries = Array.from(
+      groupEntries
+        .values()
+        .map((group) => group.sort((a, b) => compareDesc(a.date, b.date))[0])
+    );
+
     setStats({
       status: "loaded",
-      stats: data.map((entry: any) => ({
-        ...entry,
-        date: new Date(entry.date),
-      })),
+      stats: filteredEntries,
     });
   });
 
@@ -65,35 +87,35 @@ const WeeklyStats: Component<{
         },
       },
       legend: {
-        show: false
+        show: false,
       },
       color: {
-        pattern: ['#ffffff']
+        pattern: ["#ffffff"],
       },
       axis: {
         x: {
           type: "timeseries",
-          show: false
-        //   tick: {
-        //     count: 10,
-        //     format: "%Y-%m-%d",
-        //   },
+          show: false,
+          //   tick: {
+          //     count: 10,
+          //     format: "%Y-%m-%d",
+          //   },
         },
         y: {
-            show: false
-        //   label: {
-        //     text: "Время, минут",
-        //     position: "outer-middle",
-        //   },
+          show: false,
+          //   label: {
+          //     text: "Время, минут",
+          //     position: "outer-middle",
+          //   },
         },
       },
       interaction: {
-        enabled: false
-      }
-    //   grid: {
-    //     x: { show: true },
-    //     y: { show: true },
-    //   },
+        enabled: false,
+      },
+      //   grid: {
+      //     x: { show: true },
+      //     y: { show: true },
+      //   },
     });
   });
 
@@ -101,7 +123,9 @@ const WeeklyStats: Component<{
     <>
       <div>Статистика просмотренного</div>
       <div class={[styles.hint, styles.mb].join(" ")}>за неделю</div>
-      <div ref={chartElement} class={styles.chart}>Chart will be here</div>
+      <div ref={chartElement} class={styles.chart}>
+        Chart will be here
+      </div>
     </>
   );
 };
