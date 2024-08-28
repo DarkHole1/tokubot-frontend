@@ -46,7 +46,7 @@ const Plot: Component<{
   });
 
   createEffect(() => {
-    d3.select(axisLeftRef).call(d3.axisLeft(y));
+    d3.select(axisLeftRef).call(d3.axisLeft(y).tickFormat((v) => `${Math.floor(v.valueOf() / 60 / 24)}d ${Math.floor(v.valueOf() / 60 % 24)}h ${Math.floor(v.valueOf() % 60)}m`));
   });
 
   return (

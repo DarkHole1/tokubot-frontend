@@ -80,7 +80,7 @@ const WeeklyStats: Component<{
               data={stats()}
               width={350}
               height={308}
-              marginLeft={50}
+              marginLeft={80}
               marginRight={20}
               marginTop={20}
               marginBottom={20}
