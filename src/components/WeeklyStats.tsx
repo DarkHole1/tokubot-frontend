@@ -47,7 +47,7 @@ const WeeklyStats: Component<{
     const groupEntries = new Map<string, StatsEntry[]>();
 
     for (const entry of entries) {
-      const day = format(entry.date, "Y-M-d");
+      const day = format(entry.date, "y-M-d");
       let arr = groupEntries.get(day);
       if (!arr) {
         arr = [];
