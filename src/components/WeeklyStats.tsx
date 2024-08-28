@@ -1,8 +1,9 @@
-import { Component, createEffect, createSignal } from "solid-js";
+import { Component, createEffect, createSignal, Show } from "solid-js";
 import c3 from "c3";
 
 import styles from "../App.module.css";
 import { compareDesc, format, startOfDay } from "date-fns";
+import Plot from "./Plot";
 
 type Stats =
   | {
@@ -13,7 +14,7 @@ type Stats =
       stats: StatsEntry[];
     };
 
-type StatsEntry = {
+export type StatsEntry = {
   plannedMinutes: number;
   watchedMinutes: number;
   date: Date;
@@ -77,11 +78,9 @@ const WeeklyStats: Component<{
 
     const chart = c3.generate({
       bindto: chartElement,
-      // type: 'step',
       data: {
         json: currentStats.stats,
         x: "date",
-        // xFormat: '%Y-%m-%dT%H:%M:%S.%fZ',
         keys: {
           x: "date",
           value: ["watchedMinutes"],
@@ -97,26 +96,14 @@ const WeeklyStats: Component<{
         x: {
           type: "timeseries",
           show: false,
-          //   tick: {
-          //     count: 10,
-          //     format: "%Y-%m-%d",
-          //   },
         },
         y: {
           show: false,
-          //   label: {
-          //     text: "Время, минут",
-          //     position: "outer-middle",
-          //   },
         },
       },
       interaction: {
         enabled: false,
       },
-      //   grid: {
-      //     x: { show: true },
-      //     y: { show: true },
-      //   },
     });
   });
 
@@ -126,6 +113,11 @@ const WeeklyStats: Component<{
       <div class={[styles.hint, styles.mb].join(" ")}>за неделю</div>
       <div ref={chartElement} class={styles.chart}>
         Chart will be here
+      </div>
+      <div>
+        <Show when={getStats(stats())} fallback={"Loading plot"}>
+          {(stats) => <Plot data={stats()} />}
+        </Show>
       </div>
     </>
   );
