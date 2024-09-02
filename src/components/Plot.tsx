@@ -68,14 +68,14 @@ const Plot: Component<{
         transform={`translate(0,${height() - marginBottom()})`}
       ></g>
       <g ref={axisLeftRef} transform={`translate(${marginLeft()},0)`}></g>
-      <path fill="none" stroke="white" stroke-width="1.5" d={line(data())!} />
+      <path fill="none" stroke="currentColor" stroke-width="1.5" d={line(data())!} />
       <g>
         {data().map((d, i) => (
           <circle
             cx={x(d.date)}
             cy={y(d.watchedMinutes)}
             r="2.5"
-            fill="white"
+            fill="currentColor"
           />
         ))}
       </g>
