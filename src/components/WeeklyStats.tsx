@@ -1,9 +1,7 @@
 import { Component, createEffect, createSignal, Show } from "solid-js";
-import c3 from "c3";
 
 import styles from "../App.module.css";
 import {
-  addHours,
   addMinutes,
   compareDesc,
   format,
