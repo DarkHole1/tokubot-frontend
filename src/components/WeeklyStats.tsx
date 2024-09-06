@@ -1,4 +1,11 @@
-import { Component, createEffect, createSignal, Match, Show, Switch } from "solid-js";
+import {
+  Component,
+  createEffect,
+  createSignal,
+  Match,
+  Show,
+  Switch,
+} from "solid-js";
 
 import styles from "../App.module.css";
 import {
@@ -37,12 +44,13 @@ type Profiles = {
   shikimori?: string;
   anilist?: string;
   myanimelist?: string;
-};
+} | null;
 
 const getStats = (stats: Stats) =>
   stats.status == "loaded" ? stats.stats : null;
 
-const hasShikiProfile = (profiles: ProfilesLoader) => profiles._type == 'loaded' ? Boolean(profiles.profiles.shikimori) : false
+const hasShikiProfile = (profiles: ProfilesLoader) =>
+  profiles._type == "loaded" ? Boolean(profiles?.profiles?.shikimori) : false;
 
 const WeeklyStats: Component<{
   userId: number;
@@ -111,7 +119,7 @@ const WeeklyStats: Component<{
       const res = await fetch(`/api/links?id=${props.userId}`);
       const data = await res.json();
 
-      setProfiles({ _type: 'loaded', profiles: data })
+      setProfiles({ _type: "loaded", profiles: data });
     }
   });
 
@@ -121,25 +129,36 @@ const WeeklyStats: Component<{
       <div class={[styles.hint, styles.mb].join(" ")}>за неделю</div>
       <div>
         <Show when={getStats(stats())} fallback={"Loading plot"}>
-          {(stats) => (<Switch>
-            <Match when={stats().length > 3}>
-              <Plot
-                data={stats()}
-                width={350}
-                height={308}
-                marginLeft={50}
-                marginRight={20}
-                marginTop={20}
-                marginBottom={20}
-              />
-            </Match>
-            <Match when={stats().length > 0 || (stats().length == 0 && hasShikiProfile(profiles()))}>
-              На вас пока что маловато статистики. Подождите пару дней (и посмотрите аниме) :3
-            </Match>
-            <Match when={profiles()._type == 'loaded' && !hasShikiProfile(profiles())}>
-              Кажется вы ещё не добавили профиль на Шики в Руби
-            </Match>
-          </Switch>
+          {(stats) => (
+            <Switch>
+              <Match when={stats().length > 3}>
+                <Plot
+                  data={stats()}
+                  width={350}
+                  height={308}
+                  marginLeft={50}
+                  marginRight={20}
+                  marginTop={20}
+                  marginBottom={20}
+                />
+              </Match>
+              <Match
+                when={
+                  stats().length > 0 ||
+                  (stats().length == 0 && hasShikiProfile(profiles()))
+                }
+              >
+                На вас пока что маловато статистики. Подождите пару дней (и
+                посмотрите аниме) :3
+              </Match>
+              <Match
+                when={
+                  profiles()._type == "loaded" && !hasShikiProfile(profiles())
+                }
+              >
+                Кажется вы ещё не добавили профиль на Шики в Руби
+              </Match>
+            </Switch>
           )}
         </Show>
       </div>
